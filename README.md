@@ -1,8 +1,8 @@
 # btc-ownership-transfer
-Secure and convenient transfer of BTC from owner to recovery party in case of accident.
+Secure and convenient Bitcoin transfer from owner to recovery party in case of accident.
 
-### Use case
-- Owner key loss
+### Use cases
+- Owner's key loss
 - Owner unavailability or death
 
 ### Prerequisites:
