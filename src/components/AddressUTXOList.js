@@ -54,7 +54,6 @@ class AddressUTXOList extends React.Component{
 
   render(){
     const utxos = this.state.utxos;
-    // console.log(this.props.address, utxos);
     const validateAddressResult = this.validateAddress(this.props.address);
 
     const addressHeader = validateAddressResult.isValid
