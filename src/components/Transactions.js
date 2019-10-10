@@ -1,12 +1,10 @@
 import React from 'react';
 import Transaction from "./Transaction";
 
-function Transactions(){
+function Transactions(props){
   return (<div>
       <p>Transactions</p>
-      <Transaction/>
-      <Transaction/>
-      <Transaction/>
+      {props.txs.map((tx, index) => <Transaction key={index} tx={tx}/>)}
     </div>);
 }
 

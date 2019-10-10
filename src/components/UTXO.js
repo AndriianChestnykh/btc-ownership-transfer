@@ -1,7 +1,5 @@
 import React from 'react';
-import { csvCheckSigOutput, getHDClild } from '../utils';
-import * as bitcoin from 'bitcoinjs-lib';
-import bip68 from 'bip68';
+import { getRedeemScript, getHDClild, signInheritanceTx } from '../utils';
 import config from '../config';
 
 class UTXO extends React.Component {
@@ -12,22 +10,17 @@ class UTXO extends React.Component {
 
   signTx(){
     const { network } = config;
-
     const childOwner = getHDClild(config.owner.mnemonic, config.owner.derivationPath, network);
     const childHeir = getHDClild(config.heir.mnemonic, config.heir.derivationPath, network);
+    const sequenceFeed = { blocks: 5 };
+    const txid = this.props.utxo.transaction_hash;
+    const output = this.props.utxo.index;
+    const amount = this.props.utxo.value;
+    const fee = 1000;
+    const tx = signInheritanceTx({ childOwner, childHeir, txid, output, amount, fee, sequenceFeed, network });
+    // const redeemScript = getRedeemScript(owner, heir, sequenceFeed);
 
-    const owner = bitcoin.payments.p2pkh({pubkey: childOwner.publicKey, network });
-    const heir = bitcoin.payments.p2pkh({pubkey: childHeir.publicKey, network });
-
-    const sequence = bip68.encode({ blocks: 5 });
-    const p2sh = bitcoin.payments.p2sh({
-      redeem: {
-        output: csvCheckSigOutput(owner, heir, sequence),
-      },
-      network: config.network,
-    });
-
-    console.log('p2sh: ', p2sh);
+    this.props.addInheritanceTx(tx);
   }
 
   render(){

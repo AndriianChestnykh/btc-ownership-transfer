@@ -24,7 +24,7 @@ class Person extends React.Component {
         <p>Derivation path: {derivationPath}</p>
         <p>Counterparty address: {counterPartyAddress}</p><br/>
       </div>
-      <AddressUTXOList address={address}/>
+      <AddressUTXOList address={address} addInheritanceTx={this.props.addInheritanceTx}/>
     </Card>
   }
 }

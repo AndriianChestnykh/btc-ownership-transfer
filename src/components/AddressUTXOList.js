@@ -61,7 +61,7 @@ class AddressUTXOList extends React.Component{
       : <h4>Address is not valid: {validateAddressResult.message}</h4>;
 
     const utxosJSX = utxos && utxos.length
-      ? this.state.utxos.map((utxo, index) => (<UTXO key={index} index={index} utxo={utxo}/>))
+      ? this.state.utxos.map((utxo, index) => (<UTXO key={index} index={index} utxo={utxo} addInheritanceTx={this.props.addInheritanceTx}/>))
       : <div>Empty...</div>
 
     return (<div>

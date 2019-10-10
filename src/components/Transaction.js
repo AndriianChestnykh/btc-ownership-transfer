@@ -1,8 +1,9 @@
 import React from 'react';
 
-function Transaction(){
+function Transaction(props){
   return (<div>
-    <p>Transaction</p>
+    <p>Transaction:</p>
+    <p>{props.tx}</p>
   </div>);
 }
 
