@@ -66,7 +66,7 @@ function signInheritanceTx(data) {
 }
 
 function signToOwner(data){
-  const { childOwner, childHeir, redeemScript, txid, output, amount, fee, network } = data;
+  const { childOwner, /*childHeir,*/ redeemScript, txid, output, amount, fee, network } = data;
   const p2sh = bitcoin.payments.p2sh({
     redeem: {
       output: redeemScript,
@@ -78,7 +78,7 @@ function signToOwner(data){
   const tx = new bitcoin.Transaction();
   tx.version = 2;
   tx.addInput(Buffer.from(txid, 'hex').reverse(), output);  // no sequence is here
-  tx.addOutput(bitcoin.address.toOutputScript(owner.address, network), amount);
+  tx.addOutput(bitcoin.address.toOutputScript(owner.address, network), amount - fee);
 
   const signatureHash = tx.hashForSignature(
       0,

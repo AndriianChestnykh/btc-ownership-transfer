@@ -1,5 +1,4 @@
 import React from 'react';
-import { Card } from 'semantic-ui-react';
 import AddressUTXOList from "./AddressUTXOList";
 import config from '../config';
 import PropTypes from 'prop-types';
@@ -15,7 +14,7 @@ class Person extends React.Component {
     const address = bitcoin.payments.p2pkh({pubkey: child.publicKey, network}).address;
     addIntermTx ? console.log(addIntermTx.name): console.log();
 
-    return <div className="ui card">
+    return (<div className="ui card">
       <div className="content">
         <div className="header">{name}</div>
       </div>
@@ -29,7 +28,7 @@ class Person extends React.Component {
       <div className="content">
         <AddressUTXOList address={address} addIntermTx={addIntermTx} actions={['signToInterm']}/>
       </div>
-    </div>
+    </div>)
   }
 }
 

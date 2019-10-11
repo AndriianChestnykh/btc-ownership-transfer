@@ -3,7 +3,7 @@ import AddressUTXOList from "./AddressUTXOList";
 
 class Intermediate extends React.Component{
   render(){
-    return <div className="ui card">
+    return (<div className="ui card">
       <div className="content">
         <div className="header">Intermediate addresses</div>
       </div>
@@ -11,7 +11,7 @@ class Intermediate extends React.Component{
       {this.props.addresses.map((address, index) => (<AddressUTXOList key={index}
                                                                       address={address}
                                                                       actions={['sendToOwner', 'sendToHeir']}/>))}
-    </div>
+    </div>)
   }
 }
 

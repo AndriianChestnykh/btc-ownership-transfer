@@ -59,7 +59,7 @@ class UTXO extends React.Component {
 
   render(){
     return (<div style={{ wordWrap: "break-word" }}>
-      <p><strong>utxo {this.props.index + 1}</strong></p>
+      <p><strong>UTXO {this.props.index + 1}</strong></p>
       <span>Transaction hash: {this.props.utxo.transaction_hash}</span><br/>
       <span>Index: {this.props.utxo.index}</span><br/>
       <span>Value: {this.props.utxo.value / (10**8) + ' BTC'}</span><br/><br/>
