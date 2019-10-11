@@ -5,10 +5,25 @@ import config from '../config';
 class UTXO extends React.Component {
   constructor(props) {
     super(props);
-    this.signHandler = this.signHandler.bind(this);
+    this.getActionButtons = this.getActionButtons.bind(this);
+    this.signToInterm = this.signToInterm.bind(this);
+    this.sendToOwner = this.sendToOwner.bind(this);
+    this.sendToHeir = this.sendToHeir.bind(this);
   }
 
-  signHandler(){
+  getActionButtons(actions){
+    const signers = {
+      signToInterm: <button onClick={this.signToInterm}>Sign intermediate tx</button>,
+      sendToOwner: <button onClick={this.sendToOwner}>Widthraw to owner</button>,
+      sendToHeir: <button onClick={this.sendToHeir}>Widthraw to heir</button>
+    };
+
+    return actions.map(dest => {
+      return signers[dest] ? signers[dest]: '';
+    })
+  }
+
+  signToInterm(){
     const { network } = config;
     const txData = signInheritanceTx({
       childOwner: getHDClild(config.owner.mnemonic, config.owner.derivationPath, network),
@@ -24,13 +39,17 @@ class UTXO extends React.Component {
     this.props.addInheritanceTx(txData);
   }
 
+  sendToOwner(){ alert('sendToOwner') }
+
+  sendToHeir(){ alert('sendToHeir') }
+
   render(){
     return (<div>
       <p><strong>utxo {this.props.index + 1}</strong></p>
       <span>Transaction hash: {this.props.utxo.transaction_hash}</span><br/>
       <span>Index: {this.props.utxo.index}</span><br/>
       <span>Value: {this.props.utxo.value / (10**8) + ' BTC'}</span><br/><br/>
-      <button onClick={this.signHandler}>Sign</button>
+      { this.getActionButtons(this.props.actions) }
     </div>)
   }
 }

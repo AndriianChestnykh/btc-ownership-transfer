@@ -9,11 +9,9 @@ class Intermediate extends React.Component{
 
   render(){
     const addresses = this.getIntermediateAddresses(this.props.txs);
-    console.log(this.props.txs);
-    console.log(addresses);
     return <div>
       <h3>Intermediate addresses</h3>
-      {addresses.map((address, index) => <AddressUTXOList key={index} address={address}/>)} {/*2MyhmXWCppJMQH1ui42J7jF4iw4j5aPufHU*/}
+      {addresses.map((address, index) => <AddressUTXOList key={index} address={address} actions={['sendToOwner', 'sendToHeir']}/>)} {/*2MyhmXWCppJMQH1ui42J7jF4iw4j5aPufHU*/}
     </div>
   }
 }
