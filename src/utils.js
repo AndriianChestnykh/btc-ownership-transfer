@@ -3,6 +3,7 @@ import * as bip32 from 'bip32';
 import * as bip39 from 'bip39';
 import bip68 from "bip68";
 import config from "./config";
+import bs58check from 'bs58check';
 
 function csvCheckSigOutput(_alice, _bob, sequence){
   const sequenceHex = bitcoin.script.number.encode(sequence).toString('hex');
@@ -108,4 +109,19 @@ function signToOwner(data){
   alert(JSON.stringify(tx));
 }
 
-export { csvCheckSigOutput, getHDClild, signInheritanceTx, signToOwner };
+function validateAddress(address) {
+  let message;
+  let isValid = false;
+  try{
+    isValid = bs58check.decode(address).length === 21;
+    message = isValid ? '': 'Wrong address length';
+  } catch (e){
+    message = 'Error decoding base58check: ' + e.message;
+  }
+  return {
+    isValid,
+    message
+  }
+}
+
+export { csvCheckSigOutput, getHDClild, signInheritanceTx, signToOwner, validateAddress };

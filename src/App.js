@@ -10,11 +10,11 @@ class App extends React.Component {
     this.state = {
       owner: {
         mnemonic: config.owner.mnemonic,
-        address: ''
+        // address: ''
       },
       heir: {
         mnemonic: config.heir.mnemonic,
-        address: ''
+        // address: ''
       },
       intermediate: {
         // address: {
@@ -49,7 +49,8 @@ class App extends React.Component {
   }
 
   addTxToAddress(address, txid, rawTx){
-    const updatedTxs = this.state.intermediate[address].txs.concat({ id: txid, raw: rawTx });
+    const updatedTxs = this.state.intermediate[address].txs
+      .concat({ id: txid, raw: rawTx });
     const updatedAddress = Object.assign({}, this.state.intermediate[address], { txs: updatedTxs });
     return Object.assign({}, this.state.intermediate, { [address]: updatedAddress });
   }
@@ -72,12 +73,10 @@ class App extends React.Component {
     const intermAddresses = Object.keys(this.state.intermediate);
     const intermTxs = Object.keys(this.state.intermediate)
       .reduce((acc, value) => acc.concat(this.state.intermediate[value].txs), []);
-    console.log(intermTxs);
     return (
-      <div>
-        <header>
-          <h2 align="center">Safe Bitcoin inheritance</h2><br/>
-        </header>
+      <div className="ui container">
+        <p/>
+        <h2 className="ui header center aligned">Safe Bitcoin inheritance</h2>
         <div className="ui four column doubling stackable grid container">
           <div className="column">
             <Person mnemonic={this.state.owner.mnemonic}

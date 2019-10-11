@@ -18,8 +18,8 @@ class UTXO extends React.Component {
       sendToHeir: <button onClick={this.sendToHeir}>Widthraw to heir</button>
     };
 
-    return actions.map(dest => {
-      return signers[dest] ? signers[dest]: '';
+    return actions.map((dest, index) => {
+      return signers[dest] ? <div key={index}>{ signers[dest] }</div>: '';
     })
   }
 
