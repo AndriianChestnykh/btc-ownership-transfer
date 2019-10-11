@@ -16,10 +16,16 @@ class App extends React.Component {
         mnemonic: config.heir.mnemonic,
         address: ''
       },
-      inheritanceTransactions: []
+      intermediate: {
+        address: {
+          redeemScript: '',
+          lockPeriod: {},
+          txs: []
+        }
+      }
     };
     this.updateMnemonic = this.updateMnemonic.bind(this);
-    this.addInheritanceTx = this.addInheritanceTx.bind(this);
+    this.addIntermTx = this.addIntermTx.bind(this);
   }
 
   updateMnemonic(person, mnemonic){
@@ -28,13 +34,44 @@ class App extends React.Component {
     });
   }
 
-  addInheritanceTx(data){
-    this.setState((state, props) => {
-      return { inheritanceTransactions: state.inheritanceTransactions.concat([data]) };
-    });
+  addIntermTx(data){
+    const { address, redeemScript, lockPeriod, rawTx, txid } = data;
+    let updatedIntermediate;
+
+    if (this.state.intermediate[address]) {
+      updatedIntermediate = this.addTxToAddress(address, txid, rawTx);
+    } else {
+      updatedIntermediate = this.addNewAddress(address, redeemScript, lockPeriod, txid, rawTx);
+    }
+
+    this.setState(state => ({ intermediate: updatedIntermediate }));
+  }
+
+  addTxToAddress(address, txid, rawTx){
+    const updatedTxs = this.state.intermediate[address].txs.concat({ id: txid, raw: rawTx });
+    const updatedAddress = Object.assign({}, this.state.intermediate[address], { txs: updatedTxs });
+    return Object.assign({}, this.state.intermediate, { [address]: updatedAddress });
+  }
+
+  addNewAddress(address, redeemScript, lockPeriod, txid, rawTx){
+    const addressValue = {
+      redeemScript: redeemScript,
+      lockPeriod: lockPeriod,
+      txs: [
+        {
+          id: txid,
+          raw: rawTx
+        }
+      ]
+    };
+    return Object.assign({}, this.state.intermediate, { [address]: addressValue });
   }
 
   render(){
+    const intermAddresses = Object.keys(this.state.intermediate);
+    const intermTxs = Object.keys(this.state.intermediate)
+      .reduce((acc, value) => acc.concat(this.state.intermediate[value].txs), []);
+    console.log(intermTxs);
     return (
       <div>
         <header>
@@ -45,15 +82,15 @@ class App extends React.Component {
             <Person mnemonic={this.state.owner.mnemonic}
                     person="owner"
                     updateMnemonic={this.updateMnemonic}
-                    counterPartyAddress={this.state.heir.address}
-                    addInheritanceTx={this.addInheritanceTx}
+                    counterPartyAddress={this.state.heir.address} /*todo remove*/
+                    addIntermTx={this.addIntermTx}
             />
           </div>
           <div className="column">
-            <Intermediate txs={this.state.inheritanceTransactions}/>
+            <Intermediate addresses={intermAddresses}/>
           </div>
           <div className="column">
-            <Transactions txs={this.state.inheritanceTransactions}/>
+            <Transactions txs={intermTxs}/>
           </div>
           <div className="column">
             <Person mnemonic={this.state.heir.mnemonic}

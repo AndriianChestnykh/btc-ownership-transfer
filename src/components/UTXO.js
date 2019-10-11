@@ -33,13 +33,27 @@ class UTXO extends React.Component {
       amount: this.props.utxo.value,
       fee: 1000,
       sequenceFeed: { blocks: 5 },
-      network: network
+      network
     });
 
-    this.props.addInheritanceTx(txData);
+    this.props.addIntermTx(txData);
   }
 
-  sendToOwner(){ alert('sendToOwner') }
+  sendToOwner(){
+    console.log(this.signToOwner({
+      redeemScript: this.props.utxo.redeemScript,
+      txid: this.props.utxo.transaction_hash,
+      output: this.props.utxo.index,
+      amount: this.props.utxo.value,
+      fee: 1000,
+      network: config.network
+    }));
+  }
+
+  //todo this is temp code. Remove
+  signToOwner(data){
+    alert(JSON.stringify(data));
+  }
 
   sendToHeir(){ alert('sendToHeir') }
 
