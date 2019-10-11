@@ -38,9 +38,10 @@ function signInheritanceTx(data) {
   const heir = bitcoin.payments.p2pkh({pubkey: childHeir.publicKey, network });
 
   const sequence = bip68.encode(sequenceFeed);
+  const redeemScript = csvCheckSigOutput(owner, heir, sequence);
   const p2sh = bitcoin.payments.p2sh({
     redeem: {
-      output: csvCheckSigOutput(owner, heir, sequence),
+      output: redeemScript,
     },
     network: config.network,
   });
@@ -52,15 +53,16 @@ function signInheritanceTx(data) {
     compressed: true,
     network
   });
-  // console.log(bitcoin.payments.p2pkh({ pubkey: ownerECPair.publicKey, network }).address);
-  // console.log(owner.address);
   txb.sign(0, ownerECPair);
-  const txIntermediate = txb.build();
-  return JSON.stringify({tx: txIntermediate.toHex()});
+  const tx = txb.build();
+
+  return {
+    rawTx: tx.toHex(),
+    txid: tx.getId(),
+    redeemScript: redeemScript.toString('hex'),
+    lockPeriod: sequenceFeed,
+    address: p2sh.address
+  };
 }
 
-function getRedeemScript(owner, heir, sequenceFeed){
-  return '';
-}
-
-export { csvCheckSigOutput, getHDClild, signInheritanceTx, getRedeemScript };
+export { csvCheckSigOutput, getHDClild, signInheritanceTx };

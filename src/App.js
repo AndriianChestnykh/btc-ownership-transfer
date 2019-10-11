@@ -2,7 +2,7 @@ import React from 'react';
 import Person from './components/Person';
 import Transactions from './components/Transactions';
 import config from './config';
-import AddressUTXOList from "./components/AddressUTXOList";
+import Intermediate from "./components/Intermediate";
 
 class App extends React.Component {
   constructor(props) {
@@ -28,9 +28,9 @@ class App extends React.Component {
     });
   }
 
-  addInheritanceTx(tx){
+  addInheritanceTx(data){
     this.setState((state, props) => {
-      return { inheritanceTransactions: state.inheritanceTransactions.concat([tx]) };
+      return { inheritanceTransactions: state.inheritanceTransactions.concat([data]) };
     });
   }
 
@@ -50,14 +50,17 @@ class App extends React.Component {
             />
           </div>
           <div className="column">
-            <h3>Intermediate addresses</h3>
-            <AddressUTXOList address="2MyhmXWCppJMQH1ui42J7jF4iw4j5aPufHU"/>
+            <Intermediate txs={this.state.inheritanceTransactions}/>
           </div>
           <div className="column">
             <Transactions txs={this.state.inheritanceTransactions}/>
           </div>
           <div className="column">
-            <Person mnemonic={this.state.heir.mnemonic} person="heir" updateMnemonic={this.updateMnemonic} counterPartyAddress={this.state.owner.address}/>
+            <Person mnemonic={this.state.heir.mnemonic}
+                    person="heir"
+                    updateMnemonic={this.updateMnemonic}
+                    counterPartyAddress={this.state.owner.address}
+            />
           </div>
         </div>
       </div>

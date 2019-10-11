@@ -17,16 +17,6 @@ class AddressUTXOList extends React.Component{
     this.updateUTXOList(this.props.address);
   }
 
-  // shouldComponentUpdate(nextProps, nextState, nextContext) {
-  //   console.log(nextState.utxos.length, this.state.utxos.length);
-  //   if (nextProps.address !== this.props.address || nextState.utxos.length !== this.state.utxos.length) {
-  //     this.updateUTXOList(this.props.address);
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
   updateUTXOList(address){
     if (!this.validateAddress(this.props.address).isValid) return;
     const uri = `${config.apiURIs.address}/${address}`;
