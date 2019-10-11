@@ -47,14 +47,18 @@ class AddressUTXOList extends React.Component{
     const validateAddressResult = this.validateAddress(this.props.address);
 
     const addressHeader = validateAddressResult.isValid
-      ? <h4>{this.props.address}</h4>
+      ? <h4 style={{ wordWrap: "break-word" }}>{this.props.address}</h4>
       : <h4>Address is not valid: {validateAddressResult.message}</h4>;
 
     const utxosJSX = utxos && utxos.length
-      ? this.state.utxos.map((utxo, index) => (<UTXO key={index} index={index} utxo={utxo} addIntermTx={this.props.addIntermTx} actions={this.props.actions}/>))
+      ? this.state.utxos.map((utxo, index) => (<UTXO key={index}
+                                                     index={index}
+                                                     utxo={utxo}
+                                                     addIntermTx={this.props.addIntermTx}
+                                                     actions={this.props.actions}/>))
       : <div>Empty...</div>
 
-    return (<div>
+    return (<div className="content">
       {addressHeader}
       {utxosJSX}
     </div>)

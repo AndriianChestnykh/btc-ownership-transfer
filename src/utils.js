@@ -65,4 +65,47 @@ function signInheritanceTx(data) {
   };
 }
 
-export { csvCheckSigOutput, getHDClild, signInheritanceTx };
+function signToOwner(data){
+  const { childOwner, childHeir, redeemScript, txid, output, amount, fee, network } = data;
+  const p2sh = bitcoin.payments.p2sh({
+    redeem: {
+      output: redeemScript,
+    },
+    network,
+  });
+  const owner = bitcoin.payments.p2pkh({pubkey: childOwner.publicKey, network });
+
+  const tx = new bitcoin.Transaction();
+  tx.version = 2;
+  tx.addInput(Buffer.from(txid, 'hex').reverse(), output);  // no sequence is here
+  tx.addOutput(bitcoin.address.toOutputScript(owner.address, network), amount);
+
+  const signatureHash = tx.hashForSignature(
+      0,
+      p2sh.redeem.output,
+      bitcoin.Transaction.SIGHASH_ALL
+  );
+  const ownerECPair = bitcoin.ECPair.fromPrivateKey(childOwner.privateKey, {
+    compressed: true,
+    network
+  });
+  const redeemScriptSig = bitcoin.payments.p2sh({
+    network,
+    redeem: {
+      network,
+      output: p2sh.redeem.output,
+      input: bitcoin.script.compile([
+      bitcoin.script.signature.encode(
+        ownerECPair.sign(signatureHash),
+        bitcoin.Transaction.SIGHASH_ALL,
+      ),
+      bitcoin.opcodes.OP_TRUE,
+    ]),
+  },
+  }).input;
+  tx.setInputScript(0, redeemScriptSig);
+
+  alert(JSON.stringify(tx));
+}
+
+export { csvCheckSigOutput, getHDClild, signInheritanceTx, signToOwner };

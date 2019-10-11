@@ -17,13 +17,14 @@ class App extends React.Component {
         address: ''
       },
       intermediate: {
-        address: {
-          redeemScript: '',
-          lockPeriod: {},
-          txs: []
-        }
+        // address: {
+        //   redeemScript: '',
+        //   lockPeriod: {},
+        //   txs: []
+        // }
       }
     };
+
     this.updateMnemonic = this.updateMnemonic.bind(this);
     this.addIntermTx = this.addIntermTx.bind(this);
   }
@@ -75,14 +76,13 @@ class App extends React.Component {
     return (
       <div>
         <header>
-          <h2 align="center">Trustless Bitcoin transferring</h2><br/>
+          <h2 align="center">Safe Bitcoin inheritance</h2><br/>
         </header>
         <div className="ui four column doubling stackable grid container">
           <div className="column">
             <Person mnemonic={this.state.owner.mnemonic}
                     person="owner"
                     updateMnemonic={this.updateMnemonic}
-                    counterPartyAddress={this.state.heir.address} /*todo remove*/
                     addIntermTx={this.addIntermTx}
             />
           </div>
@@ -96,7 +96,6 @@ class App extends React.Component {
             <Person mnemonic={this.state.heir.mnemonic}
                     person="heir"
                     updateMnemonic={this.updateMnemonic}
-                    counterPartyAddress={this.state.owner.address}
             />
           </div>
         </div>

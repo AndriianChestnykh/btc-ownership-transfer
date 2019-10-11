@@ -1,5 +1,5 @@
 import React from 'react';
-import { getHDClild, signInheritanceTx } from '../utils';
+import * as utils from '../utils';
 import config from '../config';
 
 class UTXO extends React.Component {
@@ -25,9 +25,9 @@ class UTXO extends React.Component {
 
   signToInterm(){
     const { network } = config;
-    const txData = signInheritanceTx({
-      childOwner: getHDClild(config.owner.mnemonic, config.owner.derivationPath, network),
-      childHeir: getHDClild(config.heir.mnemonic, config.heir.derivationPath, network),
+    const txData = utils.signInheritanceTx({
+      childOwner: utils.getHDClild(config.owner.mnemonic, config.owner.derivationPath, network),
+      childHeir: utils.getHDClild(config.heir.mnemonic, config.heir.derivationPath, network),
       txid: this.props.utxo.transaction_hash,
       output: this.props.utxo.index,
       amount: this.props.utxo.value,
@@ -40,30 +40,30 @@ class UTXO extends React.Component {
   }
 
   sendToOwner(){
-    console.log(this.signToOwner({
+    const { network } = config;
+    console.log(utils.signToOwner({
+      childOwner: utils.getHDClild(config.owner.mnemonic, config.owner.derivationPath, network),
+      childHeir: utils.getHDClild(config.heir.mnemonic, config.heir.derivationPath, network),
       redeemScript: this.props.utxo.redeemScript,
       txid: this.props.utxo.transaction_hash,
       output: this.props.utxo.index,
       amount: this.props.utxo.value,
       fee: 1000,
-      network: config.network
+      network
     }));
   }
 
-  //todo this is temp code. Remove
-  signToOwner(data){
-    alert(JSON.stringify(data));
+  sendToHeir(){
+    alert('sendToHeir')
   }
 
-  sendToHeir(){ alert('sendToHeir') }
-
   render(){
-    return (<div>
+    return (<div style={{ wordWrap: "break-word" }}>
       <p><strong>utxo {this.props.index + 1}</strong></p>
       <span>Transaction hash: {this.props.utxo.transaction_hash}</span><br/>
       <span>Index: {this.props.utxo.index}</span><br/>
       <span>Value: {this.props.utxo.value / (10**8) + ' BTC'}</span><br/><br/>
-      { this.getActionButtons(this.props.actions) }
+      { this.getActionButtons(this.props.actions) }<br/><br/>
     </div>)
   }
 }

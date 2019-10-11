@@ -6,8 +6,8 @@ class Transaction extends React.Component {
     this.broadcast = this.broadcast.bind(this);
   }
 
-  formatInhTx(tx) {
-    return JSON.stringify(tx);
+  formatTx(tx) {
+    return tx.raw;
   }
 
   broadcast(){
@@ -15,10 +15,10 @@ class Transaction extends React.Component {
   }
 
   render() {
-    return (<div>
-      <p>Transaction:</p>
-      <p>{this.formatInhTx(this.props.tx)}</p>
-      <button onClick={this.broadcast}>Broadcast</button>
+    return (<div className="content" style={{ wordWrap: "break-word" }}>
+      <h4>Txid: {this.props.tx.id}</h4>
+      <p>{this.formatTx(this.props.tx)}</p>
+      <p><button onClick={this.broadcast}>Broadcast</button></p>
     </div>);
   }
 }
