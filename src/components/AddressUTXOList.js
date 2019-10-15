@@ -31,7 +31,7 @@ class AddressUTXOList extends React.Component{
       ? utxos.map((utxo, index) => (<UTXO key={index}
                                           index={index}
                                           utxo={utxo}
-                                          addIntermTx={this.props.addIntermTx}
+                                          signTx={this.props.signTx}
                                           actions={this.props.actions}/>))
       : <div>Empty...</div>);
   }

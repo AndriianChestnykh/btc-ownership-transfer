@@ -6,14 +6,14 @@ class UTXO extends React.Component {
   constructor(props) {
     super(props);
     this.getActionButtons = this.getActionButtons.bind(this);
-    this.signToInterm = this.signToInterm.bind(this);
+    this.signTx = this.signTx.bind(this);
     this.sendToOwner = this.sendToOwner.bind(this);
     this.sendToHeir = this.sendToHeir.bind(this);
   }
 
   getActionButtons(actions){
     const signers = {
-      signToInterm: <button onClick={this.signToInterm}>Sign intermediate tx</button>,
+      signTx: <button onClick={this.signTx}>Sign intermediate tx</button>,
       sendToOwner: <button onClick={this.sendToOwner}>Widthraw to owner</button>,
       sendToHeir: <button onClick={this.sendToHeir}>Widthraw to heir</button>
     };
@@ -23,9 +23,9 @@ class UTXO extends React.Component {
     })
   }
 
-  signToInterm(){
+  signTx(){
     const { network } = config;
-    const txData = utils.signInheritanceTx({
+    const txData = utils.signTx({
       childOwner: utils.getHDClild(config.owner.mnemonic, config.owner.derivationPath, network),
       childHeir: utils.getHDClild(config.heir.mnemonic, config.heir.derivationPath, network),
       txid: this.props.utxo.transaction_hash,
@@ -36,7 +36,7 @@ class UTXO extends React.Component {
       network
     });
 
-    this.props.addIntermTx(txData);
+    this.props.signTx(txData);
   }
 
   sendToOwner(){

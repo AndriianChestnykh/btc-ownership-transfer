@@ -33,7 +33,7 @@ function getHDClild(mnemonic, derivationPath, network){
   return root.derivePath(derivationPath);
 }
 
-function signInheritanceTx(data) {
+function signTx(data) {
   const { childOwner, childHeir, txid, output, amount, fee, sequenceFeed, network } = data;
   const owner = bitcoin.payments.p2pkh({pubkey: childOwner.publicKey, network });
   const heir = bitcoin.payments.p2pkh({pubkey: childHeir.publicKey, network });
@@ -58,10 +58,10 @@ function signInheritanceTx(data) {
   const tx = txb.build();
 
   return {
-    rawTx: tx.toHex(),
-    txid: tx.getId(),
-    redeemScript: redeemScript.toString('hex'),
-    lockPeriod: sequenceFeed,
+    raw: tx.toHex(),
+    id: tx.getId(),
+    redeem: redeemScript.toString('hex'),
+    lockFeed: sequenceFeed,
     address: p2sh.address
   };
 }
@@ -124,4 +124,4 @@ function validateAddress(address) {
   }
 }
 
-export { csvCheckSigOutput, getHDClild, signInheritanceTx, signToOwner, validateAddress };
+export { csvCheckSigOutput, getHDClild, signTx, signToOwner, validateAddress };

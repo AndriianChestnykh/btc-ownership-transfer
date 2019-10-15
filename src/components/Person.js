@@ -7,16 +7,16 @@ import * as bitcoin from "bitcoinjs-lib";
 
 class Person extends React.Component {
   getVariables(){
-    const { person, mnemonic, updateMnemonic, addIntermTx } = this.props;
+    const { person, mnemonic, updateMnemonic, signTx } = this.props;
     const { derivationPath, name } = config[person];
     const network = config.network;
     const child = getHDClild(mnemonic, derivationPath, network);
     const address = bitcoin.payments.p2pkh({pubkey: child.publicKey, network}).address;
-    return { person, name, mnemonic, addIntermTx, updateMnemonic, derivationPath, address }
+    return { person, name, mnemonic, signTx, updateMnemonic, derivationPath, address }
   }
 
   render(){
-    const { person, name, mnemonic, addIntermTx, updateMnemonic, derivationPath, address } = this.getVariables();
+    const { person, name, mnemonic, signTx, updateMnemonic, derivationPath, address } = this.getVariables();
 
     return (<div className="ui card">
       <div className="content">
@@ -30,7 +30,7 @@ class Person extends React.Component {
         <p>Derivation path: {derivationPath}</p>
       </div>
       <div className="content">
-        <AddressUTXOList address={address} addIntermTx={addIntermTx} actions={['signToInterm']}/>
+        <AddressUTXOList address={address} signTx={signTx} actions={['signTx']}/>
       </div>
     </div>)
   }
@@ -41,7 +41,7 @@ Person.propTypes = {
   person: PropTypes.string.isRequired,
   updateMnemonic: PropTypes.func.isRequired,
   counterPartyAddress: PropTypes.string,
-  addIntermTx: PropTypes.func
+  signTx: PropTypes.func
 };
 
 export default Person;

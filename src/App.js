@@ -16,17 +16,26 @@ class App extends React.Component {
         mnemonic: config.heir.mnemonic,
         // address: ''
       },
-      intermediate: {
-        // address: {
-        //   redeemScript: '',
-        //   lockPeriod: {},
-        //   txs: []
+      intermediate: [
+        // {
+          // address: '',
+          // redeemScript: '',
+          // lockPeriod: {},
         // }
-      }
+      ],
+      txs: [
+        // {
+        //   id: '',
+        //   raw: '',
+        //   redeem: '',
+        //   address: '',
+        //   lockFeed: ''
+        // },
+      ]
     };
 
     this.updateMnemonic = this.updateMnemonic.bind(this);
-    this.addIntermTx = this.addIntermTx.bind(this);
+    this.addTx = this.addTx.bind(this);
   }
 
   updateMnemonic(person, mnemonic){
@@ -35,38 +44,9 @@ class App extends React.Component {
     });
   }
 
-  addIntermTx(data){
-    const { address, redeemScript, lockPeriod, rawTx, txid } = data;
-    let updatedIntermediate;
-
-    if (this.state.intermediate[address]) {
-      updatedIntermediate = this.addTxToAddress(address, txid, rawTx);
-    } else {
-      updatedIntermediate = this.addNewAddress(address, redeemScript, lockPeriod, txid, rawTx);
-    }
-
-    this.setState(state => ({ intermediate: updatedIntermediate }));
-  }
-
-  addTxToAddress(address, txid, rawTx){
-    const updatedTxs = this.state.intermediate[address].txs
-      .concat({ id: txid, raw: rawTx });
-    const updatedAddress = Object.assign({}, this.state.intermediate[address], { txs: updatedTxs });
-    return Object.assign({}, this.state.intermediate, { [address]: updatedAddress });
-  }
-
-  addNewAddress(address, redeemScript, lockPeriod, txid, rawTx){
-    const addressValue = {
-      redeemScript: redeemScript,
-      lockPeriod: lockPeriod,
-      txs: [
-        {
-          id: txid,
-          raw: rawTx
-        }
-      ]
-    };
-    return Object.assign({}, this.state.intermediate, { [address]: addressValue });
+  addTx(data){
+    if (this.state.txs.filter(value => value.id === data.id).length === 0)
+      this.setState(state => ({ txs: this.state.txs.concat([data]) }));
   }
 
   render(){
@@ -82,14 +62,14 @@ class App extends React.Component {
             <Person mnemonic={this.state.owner.mnemonic}
                     person="owner"
                     updateMnemonic={this.updateMnemonic}
-                    addIntermTx={this.addIntermTx}
+                    signTx={this.addTx}
             />
           </div>
           <div className="column">
             <Intermediate addresses={intermAddresses}/>
           </div>
           <div className="column">
-            <Transactions txs={intermTxs}/>
+            <Transactions txs={this.state.txs}/>
           </div>
           <div className="column">
             <Person mnemonic={this.state.heir.mnemonic}

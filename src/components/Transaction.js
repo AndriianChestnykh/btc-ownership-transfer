@@ -6,10 +6,6 @@ class Transaction extends React.Component {
     this.broadcast = this.broadcast.bind(this);
   }
 
-  formatTx(tx) {
-    return tx.raw;
-  }
-
   broadcast(){
     alert('Will broadcast ' + this.props.tx.txid);
   }
@@ -17,7 +13,7 @@ class Transaction extends React.Component {
   render() {
     return (<div className="content" style={{ wordWrap: "break-word" }}>
       <h4>Txid: {this.props.tx.id}</h4>
-      <p>{this.formatTx(this.props.tx)}</p>
+      <p>{this.props.tx.raw}</p>
       <p><button onClick={this.broadcast}>Broadcast</button></p>
     </div>);
   }
