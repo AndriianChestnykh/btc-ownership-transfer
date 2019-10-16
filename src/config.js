@@ -15,7 +15,9 @@ const config = {
     name: 'Bob (heir)',
     mnemonic: 'boat ecology top asthma second zero brush episode consider select noble unaware',
     derivationPath: `m/44'/1'/0'/0/0`
-  }
+  },
+  sequenceFeed: { blocks: 1 },
+  fee: 10000
 };
 
 export default config;

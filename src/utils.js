@@ -76,7 +76,7 @@ function signToHeir(data){
 }
 
 function signCsvOutput(isOwner, data){
-  const { childPerson, redeemScript, txid, output, amount, fee, network } = data;
+  const { childPerson, redeemScript, txid, output, amount, fee, network, sequenceFeed } = data;
   const p2sh = bitcoin.payments.p2sh({
     redeem: {
       output: redeemScript,
@@ -87,7 +87,9 @@ function signCsvOutput(isOwner, data){
 
   const tx = new bitcoin.Transaction();
   tx.version = 2;
-  tx.addInput(Buffer.from(txid, 'hex').reverse(), output);  // no sequence is here
+  isOwner
+    ? tx.addInput(Buffer.from(txid, 'hex').reverse(), output)
+    : tx.addInput(Buffer.from(txid, 'hex').reverse(), output, bip68.encode(sequenceFeed));
   tx.addOutput(bitcoin.address.toOutputScript(person.address, network), amount - fee);
 
   const signatureHash = tx.hashForSignature(
@@ -99,7 +101,7 @@ function signCsvOutput(isOwner, data){
     compressed: true,
     network
   });
-  const preRedeemOpcode = isOwner ? bitcoin.opcodes.OP_TRUE: bitcoin.opcodes.OP_FALSE;
+  const preRedeemOpcode = isOwner ? bitcoin.opcodes.OP_TRUE: bitcoin.opcodes.OP_0;
 
   const redeemScriptSig = bitcoin.payments.p2sh({
     network,

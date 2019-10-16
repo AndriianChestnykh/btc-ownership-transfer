@@ -39,7 +39,7 @@ class AddressUTXOList extends React.Component{
   getHeader(){
     const validateAddressResult = utils.validateAddress(this.props.address);
     return validateAddressResult.isValid
-      ? <div style={{ wordWrap: "break-word" }}><h4>{this.props.address}</h4><p>Redeem: {this.props.redeem}</p></div>
+      ? <div style={{ wordWrap: "break-word" }}><h4>{this.props.address}</h4><p>Redeem: {this.props.redeem}</p><br/></div>
       : <h4>Address is not valid: {validateAddressResult.message}</h4>;
   }
 

@@ -14,18 +14,7 @@ class App extends React.Component {
       heir: {
         mnemonic: config.heir.mnemonic,
       },
-      txs: [
-        {
-          raw:
-            '020000000142d80f0d0f6ee2dbca4cb3b8e8c1082600ee60bf76a4b86f57c3f27cef0d26d0000000006a473044022010348b1ea7bba37ab570c993e0ec8f0faa2aa94700f236fdd3f4de73e93e4a51022044998fff29e81645754f654d3148afd518b53022e0820907b27c01827d53533001210266ab4d82240a5e52982272db25b85ac2798c83fb37cc348488f8cc1a4e370e61ffffffff010b3335000000000017a91446d5e583bed6f7d61e71bef8a8a7a2ad72d169c88700000000',
-          id:
-            '3088c22864790a44f1f985f4511e76540d1c40274362265d479035a73958c655',
-          redeem:
-            '63210266ab4d82240a5e52982272db25b85ac2798c83fb37cc348488f8cc1a4e370e61ac6755b2752102b71345d53b521fc8b4b7271a17fe20cf4eeb1800bf9761212246101dc80a3bf7ac68',
-          lockFeed: { blocks: 5 },
-          address: '2MyhmXWCppJMQH1ui42J7jF4iw4j5aPufHU'
-        }
-      ]
+      txs: JSON.parse(localStorage.getItem('txs')) || []
     };
 
     this.updateMnemonic = this.updateMnemonic.bind(this);
@@ -40,8 +29,11 @@ class App extends React.Component {
   }
 
   addTx(tx){
-    if (this.state.txs.filter(value => value.id === tx.id).length === 0)
-      this.setState(state => ({ txs: this.state.txs.concat([tx]) }));
+    if (this.state.txs.filter(value => value.id === tx.id).length === 0) {
+      const newTxs = this.state.txs.concat([tx]);
+      localStorage.setItem('txs', JSON.stringify(newTxs));
+      this.setState(state => ({txs: newTxs}));
+    }
   }
 
   getIntermediateUTXOData(){
@@ -77,6 +69,7 @@ class App extends React.Component {
             <Person mnemonic={this.state.heir.mnemonic}
                     person="heir"
                     updateMnemonic={this.updateMnemonic}
+                    actions={{}}
             />
           </div>
         </div>

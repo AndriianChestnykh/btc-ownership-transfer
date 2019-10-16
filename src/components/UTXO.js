@@ -29,12 +29,10 @@ class UTXO extends React.Component {
       txid: this.props.utxo.transaction_hash,
       output: this.props.utxo.index,
       amount: this.props.utxo.value,
-      fee: 1000,
-      sequenceFeed: { blocks: 5 },
+      fee: config.fee,
+      sequenceFeed: config.sequenceFeed,
       network
     });
-
-    console.log(tx);
 
     this.props.actions['addTx'](tx);
   }
@@ -47,7 +45,7 @@ class UTXO extends React.Component {
       txid: this.props.utxo.transaction_hash,
       output: this.props.utxo.index,
       amount: this.props.utxo.value,
-      fee: 1000,
+      fee: config.fee,
       network
     });
     utils.broadcastTx(tx.toHex());
@@ -61,7 +59,8 @@ class UTXO extends React.Component {
       txid: this.props.utxo.transaction_hash,
       output: this.props.utxo.index,
       amount: this.props.utxo.value,
-      fee: 1000,
+      fee: config.fee,
+      sequenceFeed: config.sequenceFeed,
       network
     });
     utils.broadcastTx(tx.toHex());
@@ -70,9 +69,10 @@ class UTXO extends React.Component {
   render(){
     return (<div style={{ wordWrap: "break-word" }}>
       <p><strong>UTXO {this.props.index + 1}</strong></p>
-      <span>Transaction hash: {this.props.utxo.transaction_hash}</span><br/>
+      <span>Tx hash: {this.props.utxo.transaction_hash}</span><br/>
       <span>Index: {this.props.utxo.index}</span><br/>
-      <span>Value: {this.props.utxo.value / (10**8) + ' BTC'}</span><br/><br/>
+      <span>Value: {this.props.utxo.value / (10**8) + ' BTC'}</span><br/>
+      <span>Block: {this.props.utxo.block_id}</span><br/><br/>
       { this.getActionButtons(this.props.actions) }<br/><br/>
     </div>)
   }
