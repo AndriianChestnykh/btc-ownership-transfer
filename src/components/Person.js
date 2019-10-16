@@ -2,21 +2,21 @@ import React from 'react';
 import AddressUTXOList from "./AddressUTXOList";
 import config from '../config';
 import PropTypes from 'prop-types';
-import { getHDClild } from '../utils';
+import { getHDChild } from '../utils';
 import * as bitcoin from "bitcoinjs-lib";
 
 class Person extends React.Component {
   getVariables(){
-    const { person, mnemonic, updateMnemonic, signTx } = this.props;
+    const { person, mnemonic, updateMnemonic } = this.props;
     const { derivationPath, name } = config[person];
     const network = config.network;
-    const child = getHDClild(mnemonic, derivationPath, network);
+    const child = getHDChild(mnemonic, derivationPath, network);
     const address = bitcoin.payments.p2pkh({pubkey: child.publicKey, network}).address;
-    return { person, name, mnemonic, signTx, updateMnemonic, derivationPath, address }
+    return { person, name, mnemonic, updateMnemonic, derivationPath, address }
   }
 
   render(){
-    const { person, name, mnemonic, signTx, updateMnemonic, derivationPath, address } = this.getVariables();
+    const { person, name, mnemonic, updateMnemonic, derivationPath, address } = this.getVariables();
 
     return (<div className="ui card">
       <div className="content">
@@ -30,7 +30,7 @@ class Person extends React.Component {
         <p>Derivation path: {derivationPath}</p>
       </div>
       <div className="content">
-        <AddressUTXOList address={address} signTx={signTx} actions={['signTx']}/>
+        <AddressUTXOList address={address} actions={this.props.actions}/>
       </div>
     </div>)
   }

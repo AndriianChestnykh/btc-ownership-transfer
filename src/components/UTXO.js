@@ -6,28 +6,26 @@ class UTXO extends React.Component {
   constructor(props) {
     super(props);
     this.getActionButtons = this.getActionButtons.bind(this);
-    this.signTx = this.signTx.bind(this);
-    this.sendToOwner = this.sendToOwner.bind(this);
-    this.sendToHeir = this.sendToHeir.bind(this);
+    this.addTxWrapper = this.addTxWrapper.bind(this);
+    this.sendToOwnerWrapper = this.sendToOwnerWrapper.bind(this);
+    this.sendToHeirWrapper = this.sendToHeirWrapper.bind(this);
   }
 
   getActionButtons(actions){
-    const signers = {
-      signTx: <button onClick={this.signTx}>Sign intermediate tx</button>,
-      sendToOwner: <button onClick={this.sendToOwner}>Widthraw to owner</button>,
-      sendToHeir: <button onClick={this.sendToHeir}>Widthraw to heir</button>
+    const buttons = {
+      addTx: <button onClick={this.addTxWrapper}>Sign intermediate tx</button>,
+      sendToOwner: <button onClick={this.sendToOwnerWrapper}>Widthraw to owner</button>,
+      sendToHeir: <button onClick={this.sendToHeirWrapper}>Widthraw to heir</button>
     };
 
-    return actions.map((dest, index) => {
-      return signers[dest] ? <div key={index}>{ signers[dest] }</div>: '';
-    })
+    return Object.keys(actions).map((action, index) => buttons[action] ? <div key={index}>{buttons[action]}</div>: '');
   }
 
-  signTx(){
+  addTxWrapper(){
     const { network } = config;
-    const txData = utils.signTx({
-      childOwner: utils.getHDClild(config.owner.mnemonic, config.owner.derivationPath, network),
-      childHeir: utils.getHDClild(config.heir.mnemonic, config.heir.derivationPath, network),
+    const tx = utils.signTx({
+      childOwner: utils.getHDChild(config.owner.mnemonic, config.owner.derivationPath, network),
+      childHeir: utils.getHDChild(config.heir.mnemonic, config.heir.derivationPath, network),
       txid: this.props.utxo.transaction_hash,
       output: this.props.utxo.index,
       amount: this.props.utxo.value,
@@ -36,25 +34,37 @@ class UTXO extends React.Component {
       network
     });
 
-    this.props.signTx(txData);
+    console.log(tx);
+
+    this.props.actions['addTx'](tx);
   }
 
-  sendToOwner(){
+  sendToOwnerWrapper(){
     const { network } = config;
-    console.log(utils.signToOwner({
-      childOwner: utils.getHDClild(config.owner.mnemonic, config.owner.derivationPath, network),
-      childHeir: utils.getHDClild(config.heir.mnemonic, config.heir.derivationPath, network),
-      redeemScript: this.props.utxo.redeemScript,
+    const tx = utils.signToOwner({
+      childPerson: utils.getHDChild(config.owner.mnemonic, config.owner.derivationPath, network),
+      redeemScript: Buffer.from(this.props.redeem, 'hex'),
       txid: this.props.utxo.transaction_hash,
       output: this.props.utxo.index,
       amount: this.props.utxo.value,
       fee: 1000,
       network
-    }));
+    });
+    utils.broadcastTx(tx.toHex());
   }
 
-  sendToHeir(){
-    alert('sendToHeir')
+  sendToHeirWrapper(){
+    const { network } = config;
+    const tx = utils.signToHeir({
+      childPerson: utils.getHDChild(config.heir.mnemonic, config.heir.derivationPath, network),
+      redeemScript: Buffer.from(this.props.redeem, 'hex'),
+      txid: this.props.utxo.transaction_hash,
+      output: this.props.utxo.index,
+      amount: this.props.utxo.value,
+      fee: 1000,
+      network
+    });
+    utils.broadcastTx(tx.toHex());
   }
 
   render(){

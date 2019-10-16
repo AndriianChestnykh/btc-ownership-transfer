@@ -3,9 +3,10 @@ import AddressUTXOList from "./AddressUTXOList";
 
 class Intermediate extends React.Component{
   getAddressUtxoLists() {
-    return this.props.addresses.map((address, index) => (<AddressUTXOList key={index}
-                                                                          address={address}
-                                                                          actions={['sendToOwner', 'sendToHeir']}/>))
+    return this.props.addressesData.map((data, index) => (<AddressUTXOList key={index}
+                                                                          address={data.address}
+                                                                          redeem={data.redeem}
+                                                                          actions={this.props.actions}/>))
   }
 
   // 2MyhmXWCppJMQH1ui42J7jF4iw4j5aPufHU

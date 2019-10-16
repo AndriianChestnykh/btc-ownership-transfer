@@ -3,7 +3,8 @@ import * as bitcoin from 'bitcoinjs-lib';
 const config = {
   network: bitcoin.networks.testnet,
   apiURIs: {
-    address: 'https://api.blockchair.com/bitcoin/testnet/dashboards/address'
+    address: 'https://api.blockchair.com/bitcoin/testnet/dashboards/address',
+    pushTx: 'https://api.blockchair.com/bitcoin/testnet/push/transaction'
   },
   owner: {
     name: 'Alice (owner)',

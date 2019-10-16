@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import * as utils from '../utils';
 
 class AddressUTXOList extends React.Component{
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       utxos: []
@@ -31,7 +31,7 @@ class AddressUTXOList extends React.Component{
       ? utxos.map((utxo, index) => (<UTXO key={index}
                                           index={index}
                                           utxo={utxo}
-                                          signTx={this.props.signTx}
+                                          redeem={this.props.redeem}
                                           actions={this.props.actions}/>))
       : <div>Empty...</div>);
   }
@@ -39,7 +39,7 @@ class AddressUTXOList extends React.Component{
   getHeader(){
     const validateAddressResult = utils.validateAddress(this.props.address);
     return validateAddressResult.isValid
-      ? <h4 style={{ wordWrap: "break-word" }}>{this.props.address}</h4>
+      ? <div style={{ wordWrap: "break-word" }}><h4>{this.props.address}</h4><p>Redeem: {this.props.redeem}</p></div>
       : <h4>Address is not valid: {validateAddressResult.message}</h4>;
   }
 
@@ -52,7 +52,7 @@ class AddressUTXOList extends React.Component{
 }
 
 AddressUTXOList.propTypes = {
-  address: PropTypes.string
+  address: PropTypes.string.isRequired
 };
 
 export default AddressUTXOList;

@@ -4,6 +4,7 @@ import * as bip39 from 'bip39';
 import bip68 from "bip68";
 import config from "./config";
 import bs58check from 'bs58check';
+import axios from "axios";
 
 function csvCheckSigOutput(_alice, _bob, sequence){
   const sequenceHex = bitcoin.script.number.encode(sequence).toString('hex');
@@ -27,7 +28,7 @@ function csvCheckSigOutput(_alice, _bob, sequence){
   )
 }
 
-function getHDClild(mnemonic, derivationPath, network){
+function getHDChild(mnemonic, derivationPath, network){
   const seed = bip39.mnemonicToSeedSync(mnemonic);
   const root = bip32.fromSeed(seed);
   return root.derivePath(derivationPath);
@@ -67,29 +68,39 @@ function signTx(data) {
 }
 
 function signToOwner(data){
-  const { childOwner, /*childHeir,*/ redeemScript, txid, output, amount, fee, network } = data;
+  return signCsvOutput(true, data);
+}
+
+function signToHeir(data){
+  return signCsvOutput(false, data);
+}
+
+function signCsvOutput(isOwner, data){
+  const { childPerson, redeemScript, txid, output, amount, fee, network } = data;
   const p2sh = bitcoin.payments.p2sh({
     redeem: {
       output: redeemScript,
     },
     network,
   });
-  const owner = bitcoin.payments.p2pkh({pubkey: childOwner.publicKey, network });
+  const person = bitcoin.payments.p2pkh({pubkey: childPerson.publicKey, network });
 
   const tx = new bitcoin.Transaction();
   tx.version = 2;
   tx.addInput(Buffer.from(txid, 'hex').reverse(), output);  // no sequence is here
-  tx.addOutput(bitcoin.address.toOutputScript(owner.address, network), amount - fee);
+  tx.addOutput(bitcoin.address.toOutputScript(person.address, network), amount - fee);
 
   const signatureHash = tx.hashForSignature(
       0,
       p2sh.redeem.output,
       bitcoin.Transaction.SIGHASH_ALL
   );
-  const ownerECPair = bitcoin.ECPair.fromPrivateKey(childOwner.privateKey, {
+  const personECPair = bitcoin.ECPair.fromPrivateKey(childPerson.privateKey, {
     compressed: true,
     network
   });
+  const preRedeemOpcode = isOwner ? bitcoin.opcodes.OP_TRUE: bitcoin.opcodes.OP_FALSE;
+
   const redeemScriptSig = bitcoin.payments.p2sh({
     network,
     redeem: {
@@ -97,17 +108,18 @@ function signToOwner(data){
       output: p2sh.redeem.output,
       input: bitcoin.script.compile([
       bitcoin.script.signature.encode(
-        ownerECPair.sign(signatureHash),
+        personECPair.sign(signatureHash),
         bitcoin.Transaction.SIGHASH_ALL,
       ),
-      bitcoin.opcodes.OP_TRUE,
+      preRedeemOpcode,
     ]),
   },
   }).input;
   tx.setInputScript(0, redeemScriptSig);
-
-  alert(JSON.stringify(tx));
+  return tx;
 }
+
+
 
 function validateAddress(address) {
   let message;
@@ -124,4 +136,15 @@ function validateAddress(address) {
   }
 }
 
-export { csvCheckSigOutput, getHDClild, signTx, signToOwner, validateAddress };
+async function broadcastTx(tx){
+  const uri = config.apiURIs.pushTx;
+  const response = await axios.post(uri, { data: tx }, {
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    }
+  })
+    .catch(error => alert('Blockchain API request error: ' + error));
+  if (response) alert('Broadcasted with message: ' + JSON.stringify(response));
+}
+
+export { csvCheckSigOutput, getHDChild, signTx, signToOwner, signToHeir, validateAddress, broadcastTx };
