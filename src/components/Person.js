@@ -3,20 +3,12 @@ import AddressUTXOList from "./AddressUTXOList";
 import config from '../config';
 import PropTypes from 'prop-types';
 import { getHDChild } from '../utils';
-import * as bitcoin from "bitcoinjs-lib";
 
 class Person extends React.Component {
-  getVariables(){
-    const { person, mnemonic, updateMnemonic } = this.props;
-    const { derivationPath, name } = config[person];
-    const network = config.network;
-    const child = getHDChild(mnemonic, derivationPath, network);
-    const address = bitcoin.payments.p2pkh({pubkey: child.publicKey, network}).address;
-    return { person, name, mnemonic, updateMnemonic, derivationPath, address }
-  }
-
   render(){
-    const { person, name, mnemonic, updateMnemonic, derivationPath, address } = this.getVariables();
+    const { person, mnemonic, updateMnemonic } = this.props;
+    const { [person]: { derivationPath, name }, network } = config;
+    const { address } = getHDChild(mnemonic, derivationPath, network);
 
     return (<div className="ui card">
       <div className="content">

@@ -24,8 +24,8 @@ class UTXO extends React.Component {
   addTxWrapper(){
     const { network } = config;
     const tx = utils.signTx({
-      childOwner: utils.getHDChild(config.owner.mnemonic, config.owner.derivationPath, network),
-      childHeir: utils.getHDChild(config.heir.mnemonic, config.heir.derivationPath, network),
+      childOwner: utils.getHDChild(config.owner.mnemonic, config.owner.derivationPath, network).child,
+      childHeir: utils.getHDChild(config.heir.mnemonic, config.heir.derivationPath, network).child,
       txid: this.props.utxo.transaction_hash,
       output: this.props.utxo.index,
       amount: this.props.utxo.value,
@@ -37,10 +37,12 @@ class UTXO extends React.Component {
     this.props.actions['addTx'](tx);
   }
 
+  //todo refactor next two methods to meet DRY
   sendToOwnerWrapper(){
     const { network } = config;
+    const { child, address } = utils.getHDChild(config.owner.mnemonic, config.owner.derivationPath, network);
     const tx = utils.signToOwner({
-      childPerson: utils.getHDChild(config.owner.mnemonic, config.owner.derivationPath, network),
+      childPerson: child,
       redeemScript: Buffer.from(this.props.redeem, 'hex'),
       txid: this.props.utxo.transaction_hash,
       output: this.props.utxo.index,
@@ -49,12 +51,14 @@ class UTXO extends React.Component {
       network
     });
     utils.broadcastTx(tx.toHex());
+    this.props.actions['removeIntermediate'](address);
   }
 
   sendToHeirWrapper(){
     const { network } = config;
+    const { child, address } = utils.getHDChild(config.heir.mnemonic, config.heir.derivationPath, network);
     const tx = utils.signToHeir({
-      childPerson: utils.getHDChild(config.heir.mnemonic, config.heir.derivationPath, network),
+      childPerson: child,
       redeemScript: Buffer.from(this.props.redeem, 'hex'),
       txid: this.props.utxo.transaction_hash,
       output: this.props.utxo.index,
@@ -64,6 +68,7 @@ class UTXO extends React.Component {
       network
     });
     utils.broadcastTx(tx.toHex());
+    this.props.actions['removeIntermediate'](address);
   }
 
   render(){

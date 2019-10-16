@@ -3,10 +3,14 @@ import Person from './components/Person';
 import Transactions from './components/Transactions';
 import config from './config';
 import Intermediate from "./components/Intermediate";
+import {getHDChild} from "./utils";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
+
+    const storage = this.getStorage();
+
     this.state = {
       owner: {
         mnemonic: config.owner.mnemonic,
@@ -14,35 +18,85 @@ class App extends React.Component {
       heir: {
         mnemonic: config.heir.mnemonic,
       },
-      txs: JSON.parse(localStorage.getItem('txs')) || []
+      intermediate: storage.intermediate,
+      txs: storage.txs
     };
 
     this.updateMnemonic = this.updateMnemonic.bind(this);
     this.addTx = this.addTx.bind(this);
-    this.getIntermediateUTXOData = this.getIntermediateUTXOData.bind(this);
+    this.removeTx = this.removeTx.bind(this);
+    this.addIntermediate = this.addIntermediate.bind(this);
+    this.removeIntermediate = this.removeIntermediate.bind(this);
   }
 
-  updateMnemonic(person, mnemonic){
+  getStorageKey() {
+    const { owner, heir, network } = config;
+    const { address: addressOwner } = getHDChild(owner.mnemonic, owner.derivationPath, network);
+    const { address: addressHeir } = getHDChild(heir.mnemonic, heir.derivationPath, network);
+    return `${addressOwner}_${addressHeir}`
+  }
+
+  getStorage() {
+    const storage = JSON.parse(localStorage.getItem(this.getStorageKey()));
+    return {
+      intermediate: storage ? storage.intermediate: [],
+      txs: storage ? storage.txs: []
+    }
+  }
+
+  setStorage(newStorage) {
+    localStorage.setItem(this.getStorageKey(), JSON.stringify(newStorage));
+  }
+
+  updateMnemonic(person, mnemonic) {
     this.setState((state, props) => {
       return {[person]: Object.assign({}, this.state[person], {mnemonic})}
     });
   }
 
-  addTx(tx){
-    if (this.state.txs.filter(value => value.id === tx.id).length === 0) {
-      const newTxs = this.state.txs.concat([tx]);
-      localStorage.setItem('txs', JSON.stringify(newTxs));
-      this.setState(state => ({txs: newTxs}));
+  addStateData(data, propName, keyName) {
+    if (this.state[propName].filter(value => value[keyName] === data[keyName]).length === 0) {
+      const newProp = this.state[propName].concat([data]);
+      this.setState(state => {
+        let storage = this.getStorage();
+        storage[propName] = newProp;
+        this.setStorage(storage);
+        return { [propName]: newProp }
+      });
     }
   }
 
-  getIntermediateUTXOData(){
-    return this.state.txs.reduce((acc, value) => {
-      if (acc.filter(v => v.address === value.address).length === 0)
-        acc.push({ address: value.address, redeem: value.redeem});
-      return acc;
-    }, []);
+  removeStateData(propName, keyName, keyValue) {
+    const filtered = this.state[propName].filter(value => value[keyName] === keyValue);
+    if (filtered.length !== 0) {
+      const newProp = this.state[propName].slice();
+      const index = this.state[propName].indexOf(filtered[0]);
+      newProp.splice(index, 1);
+      this.setState(state => {
+        let storage = this.getStorage();
+        storage[propName] = newProp;
+        this.setStorage(storage);
+        return { [propName]: newProp }
+      });
+    }
   }
+
+  addTx(tx) {
+    this.addStateData(tx, 'txs', 'id');
+  }
+
+  removeTx(txid) {
+    this.removeStateData('txs', 'id', txid);
+  }
+
+  addIntermediate(data) {
+    this.addStateData(data, 'intermediate', 'address');
+  }
+
+  removeIntermediate(address) {
+    this.removeStateData('intermediate', 'address', address);
+  }
+
 
   // '2MyhmXWCppJMQH1ui42J7jF4iw4j5aPufHU'
   render(){
@@ -59,11 +113,11 @@ class App extends React.Component {
             />
           </div>
           <div className="column">
-            <Transactions txs={this.state.txs}/>
+            <Transactions txs={this.state.txs} removeTx={this.removeTx} addIntermediate={this.addIntermediate}/>
           </div>
           <div className="column">
-            <Intermediate addressesData={this.getIntermediateUTXOData()}
-                          actions={{ sendToOwner: 'sendToOwner', sendToHeir: 'sendToHeir' }}/>
+            <Intermediate addressesData={this.state.intermediate}
+                          actions={{ sendToOwner: this.removeIntermediate, sendToHeir: this.removeIntermediate }}/>
           </div>
           <div className="column">
             <Person mnemonic={this.state.heir.mnemonic}

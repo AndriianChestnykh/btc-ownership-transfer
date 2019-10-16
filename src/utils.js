@@ -30,8 +30,9 @@ function csvCheckSigOutput(_alice, _bob, sequence){
 
 function getHDChild(mnemonic, derivationPath, network){
   const seed = bip39.mnemonicToSeedSync(mnemonic);
-  const root = bip32.fromSeed(seed);
-  return root.derivePath(derivationPath);
+  const child = bip32.fromSeed(seed).derivePath(derivationPath);
+  const address = bitcoin.payments.p2pkh({pubkey: child.publicKey, network}).address;
+  return { child, address, publicKey: child.publicKey };
 }
 
 function signTx(data) {

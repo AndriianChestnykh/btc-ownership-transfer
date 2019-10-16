@@ -6,7 +6,7 @@ function Transactions(props){
       <div className="content">
         <div className="header">Transactions</div>
       </div>
-      {props.txs.map((tx, index) => <Transaction key={index} tx={tx}/>)}
+      {props.txs.map((tx, index) => <Transaction key={index} tx={tx} removeTx={props.removeTx} addIntermediate={props.addIntermediate}/>)}
     </div>);
 }
 
