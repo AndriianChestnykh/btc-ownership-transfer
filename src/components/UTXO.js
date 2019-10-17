@@ -51,7 +51,7 @@ class UTXO extends React.Component {
       network
     });
     utils.broadcastTx(tx.toHex());
-    this.props.actions['removeIntermediate'](address);
+    this.props.actions['sendToOwner'](address);
   }
 
   sendToHeirWrapper(){
@@ -68,7 +68,7 @@ class UTXO extends React.Component {
       network
     });
     utils.broadcastTx(tx.toHex());
-    this.props.actions['removeIntermediate'](address);
+    this.props.actions['sendToHeir'](address);
   }
 
   render(){

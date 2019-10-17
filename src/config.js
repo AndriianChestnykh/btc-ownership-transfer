@@ -16,7 +16,7 @@ const config = {
     mnemonic: 'boat ecology top asthma second zero brush episode consider select noble unaware',
     derivationPath: `m/44'/1'/0'/0/0`
   },
-  sequenceFeed: { blocks: 1 },
+  sequenceFeed: { blocks: 6 },
   fee: 10000
 };
 
