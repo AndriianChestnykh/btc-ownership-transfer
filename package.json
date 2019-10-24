@@ -2,6 +2,7 @@
   "name": "btc-ownership-transfer",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://andriianchestnykh.github.io/btc-safe-inherinance/",
   "dependencies": {
     "axios": "^0.19.0",
     "bcoin": "^1.0.2",
