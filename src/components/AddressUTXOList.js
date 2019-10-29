@@ -8,7 +8,9 @@ import * as utils from '../utils';
 class AddressUTXOList extends React.Component{
   constructor(props) {
     super(props);
+    this.loadingUTXOs = false;
     this.state = {
+      needToRerenderUTXOs: false,
       utxos: []
     };
   }
@@ -17,23 +19,42 @@ class AddressUTXOList extends React.Component{
     this.updateUTXOList(this.props.address);
   }
 
-  async updateUTXOList(address){
-    if (!utils.validateAddress(this.props.address).isValid) return;
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.address !== this.props.address) {
+      this.updateUTXOList(nextProps.address);
+      return true;
+    }
+    return nextState.needToRerenderUTXOs;
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (!prevState && this.state.needToRerenderUTXOs) this.setState({ needToRerenderUTXOs: false });
+  }
+
+  async updateUTXOList(address) {
+    if (!utils.validateAddress(address).isValid) return;
+    this.loadingUTXOs = true;
     const uri = `${config.apiURIs.address}/${address}`;
     const response = await axios.get(uri)
       .catch(error => alert('Blockchain API request error: ' + error));
-    this.setState({ utxos: response.data.data[address].utxo });
+    console.log(`Fetching for ${address}`);
+    this.loadingUTXOs = false;
+    this.setState({ needToRerenderUTXOs: true, utxos: response.data.data[address].utxo });
   }
 
   getAllUtxo(){
-    const utxos = this.state.utxos;
-    return (utxos && utxos.length
-      ? utxos.map((utxo, index) => (<UTXO key={index}
-                                          index={index}
-                                          utxo={utxo}
-                                          redeem={this.props.redeem}
-                                          actions={this.props.actions}/>))
-      : <div>Empty...</div>);
+    if (!this.loadingUTXOs) {
+      const utxos = this.state.utxos;
+      return (utxos.length
+        ? utxos.map((utxo, index) => (<UTXO key={index}
+                                            index={index}
+                                            utxo={utxo}
+                                            redeem={this.props.redeem}
+                                            actions={this.props.actions}/>))
+        : <div>No UTXOs</div>);
+    } else {
+      return <div>Loading...</div>
+    }
   }
 
   getHeader(){
