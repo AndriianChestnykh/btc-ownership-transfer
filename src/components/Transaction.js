@@ -17,6 +17,7 @@ class Transaction extends React.Component {
     return (<div className="content" style={{ wordWrap: "break-word" }}>
       <h4>Txid: {this.props.tx.id}</h4>
       <p>{this.props.tx.raw}</p>
+      <p>{JSON.stringify(this.props.tx.info)}</p>
       <p><button onClick={this.broadcast}>Broadcast</button></p>
     </div>);
   }

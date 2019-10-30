@@ -9,18 +9,14 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    const storage = this.getStorage();
-
     this.state = {
-      owner: {
-        mnemonic: config.owner.mnemonic,
-      },
-      heir: {
-        mnemonic: config.heir.mnemonic,
-      },
-      intermediate: storage.intermediate,
-      txs: storage.txs
+      owner: config.owner,
+      heir: config.heir,
+      network: config.network
     };
+
+    const { owner, heir, network } = this.state;
+    Object.assign(this.state, this.getStorage(owner, heir, network));
 
     this.updateMnemonic = this.updateMnemonic.bind(this);
     this.addTx = this.addTx.bind(this);
@@ -29,38 +25,49 @@ class App extends React.Component {
     this.removeIntermediate = this.removeIntermediate.bind(this);
   }
 
-  getStorageKey() {
-    const { owner, heir, network } = config;
+  getStorageKey(owner, heir, network) {
     const { address: addressOwner } = getHDChild(owner.mnemonic, owner.derivationPath, network);
     const { address: addressHeir } = getHDChild(heir.mnemonic, heir.derivationPath, network);
     return `${addressOwner}_${addressHeir}`
   }
 
-  getStorage() {
-    const storage = JSON.parse(localStorage.getItem(this.getStorageKey()));
+  getStorage(owner, heir, network) {
+    const storage = JSON.parse(localStorage.getItem(this.getStorageKey(owner, heir, network)));
     return {
       intermediate: storage ? storage.intermediate: [],
       txs: storage ? storage.txs: []
     }
   }
 
-  setStorage(newStorage) {
-    localStorage.setItem(this.getStorageKey(), JSON.stringify(newStorage));
+  setStorage(data) {
+    const { owner, heir, network, storage } = data;
+    localStorage.setItem(this.getStorageKey(owner, heir, network), JSON.stringify(storage));
   }
 
   updateMnemonic(person, mnemonic) {
+    const { owner, heir, network } = this.state;
+    person === 'owner' ? owner.mnemonic = mnemonic: heir.mnemonic = mnemonic;
+    const storage = this.getStorage(owner, heir, network);
+    const newState = Object.assign(
+      {},
+      this.state,
+      {[person]: Object.assign({}, this.state[person], { mnemonic })},
+      storage
+    );
+
     this.setState((state, props) => {
-      return {[person]: Object.assign({}, this.state[person], {mnemonic})}
+      return newState
     });
   }
 
-  addStateData(data, propName, keyName) {
+   addStateData(data, propName, keyName) {
     if (this.state[propName].filter(value => value[keyName] === data[keyName]).length === 0) {
       const newProp = this.state[propName].concat([data]);
       this.setState(state => {
-        let storage = this.getStorage();
+        const { owner, heir, network } = this.state;
+        let storage = this.getStorage(owner, heir, network);
         storage[propName] = newProp;
-        this.setStorage(storage);
+        this.setStorage({ owner, heir, network, storage });
         return { [propName]: newProp }
       });
     }
@@ -73,9 +80,10 @@ class App extends React.Component {
       const index = this.state[propName].indexOf(filtered[0]);
       newProp.splice(index, 1);
       this.setState(state => {
-        let storage = this.getStorage();
+        const { owner, heir, network } = this.state;
+        let storage = this.getStorage(owner, heir, network);
         storage[propName] = newProp;
-        this.setStorage(storage);
+        this.setStorage({ owner, heir, network, storage });
         return { [propName]: newProp }
       });
     }
@@ -96,7 +104,6 @@ class App extends React.Component {
   removeIntermediate(address) {
     this.removeStateData('intermediate', 'address', address);
   }
-
 
   // '2MyhmXWCppJMQH1ui42J7jF4iw4j5aPufHU'
   render(){

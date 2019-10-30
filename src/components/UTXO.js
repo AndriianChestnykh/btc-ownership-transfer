@@ -22,10 +22,13 @@ class UTXO extends React.Component {
   }
 
   addTxWrapper(){
+    //todo not from config but from method params
     const { network } = config;
+    const owner = utils.getHDChild(config.owner.mnemonic, config.owner.derivationPath, network);
+    const heir = utils.getHDChild(config.heir.mnemonic, config.heir.derivationPath, network);
     const tx = utils.signTx({
-      childOwner: utils.getHDChild(config.owner.mnemonic, config.owner.derivationPath, network).child,
-      childHeir: utils.getHDChild(config.heir.mnemonic, config.heir.derivationPath, network).child,
+      childOwner: owner.child,
+      childHeir: heir.child,
       txid: this.props.utxo.transaction_hash,
       output: this.props.utxo.index,
       amount: this.props.utxo.value,
@@ -33,12 +36,20 @@ class UTXO extends React.Component {
       sequenceFeed: config.sequenceFeed,
       network
     });
+    Object.assign(tx, {info: {
+      from: owner.address,
+      to: heir.address,
+      amount: this.props.utxo.value,
+      fee: config.fee,
+      sequenceFeed: config.sequenceFeed
+    }});
 
     this.props.actions['addTx'](tx);
   }
 
   //todo refactor next two methods to meet DRY
   sendToOwnerWrapper(){
+    //todo not from config but from method params
     const { network } = config;
     const { child, address } = utils.getHDChild(config.owner.mnemonic, config.owner.derivationPath, network);
     const tx = utils.signToOwner({
