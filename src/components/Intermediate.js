@@ -6,6 +6,7 @@ class Intermediate extends React.Component{
     return this.props.addressesData.map((data, index) => (<AddressUTXOList key={index}
                                                                           address={data.address}
                                                                           redeem={data.redeem}
+                                                                          info={data.info}
                                                                           actions={this.props.actions}/>))
   }
 

@@ -61,16 +61,22 @@ class App extends React.Component {
   }
 
    addStateData(data, propName, keyName) {
+    let newProp;
     if (this.state[propName].filter(value => value[keyName] === data[keyName]).length === 0) {
-      const newProp = this.state[propName].concat([data]);
-      this.setState(state => {
-        const { owner, heir, network } = this.state;
-        let storage = this.getStorage(owner, heir, network);
-        storage[propName] = newProp;
-        this.setStorage({ owner, heir, network, storage });
-        return { [propName]: newProp }
-      });
+      newProp = this.state[propName].concat([data]);
+    } else {
+      newProp = this.state[propName].slice();
+      const index = newProp.indexOf(value => value[keyName] === data[keyName]);
+      newProp[index] = data;
     }
+
+    this.setState(state => {
+     const { owner, heir, network } = this.state;
+     let storage = this.getStorage(owner, heir, network);
+     storage[propName] = newProp;
+     this.setStorage({ owner, heir, network, storage });
+     return { [propName]: newProp }
+    });
   }
 
   removeStateData(propName, keyName, keyValue) {

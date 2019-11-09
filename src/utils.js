@@ -139,7 +139,7 @@ function validateAddress(address) {
   }
 }
 
-async function broadcastTx(tx){
+async function broadcastTx(tx) {
   const uri = config.apiURIs.pushTx;
   const response = await axios.post(uri, { data: tx }, {
     headers: {
@@ -150,4 +150,8 @@ async function broadcastTx(tx){
   if (response) alert('Broadcasted with message: ' + JSON.stringify(response));
 }
 
-export { csvCheckSigOutput, getHDChild, signTx, signToOwner, signToHeir, validateAddress, broadcastTx };
+function isValidMnemonic(mnemonic) {
+  return bip39.validateMnemonic(mnemonic)
+}
+
+export { csvCheckSigOutput, getHDChild, signTx, signToOwner, signToHeir, validateAddress, broadcastTx, isValidMnemonic };

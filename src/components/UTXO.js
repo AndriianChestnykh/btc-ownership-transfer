@@ -37,8 +37,8 @@ class UTXO extends React.Component {
       network
     });
     Object.assign(tx, {info: {
-      from: owner.address,
-      to: heir.address,
+      owner: owner.address,
+      heir: heir.address,
       amount: this.props.utxo.value,
       fee: config.fee,
       sequenceFeed: config.sequenceFeed

@@ -8,15 +8,15 @@ const config = {
   },
   owner: {
     name: 'Alice (owner)',
-    mnemonic: 'assist drama typical garbage artwork devote expect invest theme speed surge you',
+    mnemonic: '',
     derivationPath: `m/44'/1'/0'/0/0`
   },
   heir: {
     name: 'Bob (heir)',
-    mnemonic: 'boat ecology top asthma second zero brush episode consider select noble unaware',
+    mnemonic: '',
     derivationPath: `m/44'/1'/0'/0/0`
   },
-  sequenceFeed: { blocks: 6 },
+  sequenceFeed: { blocks: 1 },
   fee: 10000
 };
 

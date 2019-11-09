@@ -2,13 +2,13 @@ import React from 'react';
 import AddressUTXOList from "./AddressUTXOList";
 import config from '../config';
 import PropTypes from 'prop-types';
-import { getHDChild } from '../utils';
+import { getHDChild, isValidMnemonic } from '../utils';
 
 class Person extends React.Component {
   render(){
     const { person, mnemonic, updateMnemonic } = this.props;
     const { [person]: { derivationPath, name }, network } = config;
-    const { address } = getHDChild(mnemonic, derivationPath, network);
+    const { address } = isValidMnemonic(mnemonic) ? getHDChild(mnemonic, derivationPath, network): {};
 
     return (<div className="ui card">
       <div className="content">
