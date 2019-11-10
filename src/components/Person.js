@@ -19,6 +19,7 @@ class Person extends React.Component {
           <label htmlFor="mnemonic"></label><br/>
           <textarea id="mnemonic" name="mnemonic" cols="30" rows="3" onChange={(e) => updateMnemonic(person, e.target.value)} defaultValue={mnemonic}></textarea>
         </form>
+        <p style={{color: 'red'}}>{!isValidMnemonic(mnemonic) ? 'Mnemonic is not valid! Please enter valid mnemonic': ''}</p>
         <p>Derivation path: {derivationPath}</p>
       </div>
       <div className="content">

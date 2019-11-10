@@ -16,7 +16,7 @@ const config = {
     mnemonic: '',
     derivationPath: `m/44'/1'/0'/0/0`
   },
-  sequenceFeed: { blocks: 1 },
+  sequenceFeed: { blocks: 6 },
   fee: 10000
 };
 
