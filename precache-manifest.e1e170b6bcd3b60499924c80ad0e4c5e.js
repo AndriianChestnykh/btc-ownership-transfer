@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "d98cb99821b79450a687176d14662628",
+    "revision": "75ce5537ccdd04ad0feb5a32a478f0dd",
     "url": "/btc-safe-inherinance/index.html"
   },
   {
-    "revision": "68e2e70be9e3181eef1f",
+    "revision": "3f96e83f98867cd49314",
     "url": "/btc-safe-inherinance/static/css/2.8f22c830.chunk.css"
   },
   {
-    "revision": "68e2e70be9e3181eef1f",
-    "url": "/btc-safe-inherinance/static/js/2.44510418.chunk.js"
+    "revision": "3f96e83f98867cd49314",
+    "url": "/btc-safe-inherinance/static/js/2.83be3be4.chunk.js"
   },
   {
-    "revision": "670484a8e09078a6b070",
-    "url": "/btc-safe-inherinance/static/js/main.10b59f79.chunk.js"
+    "revision": "2ce911911f175dacf835",
+    "url": "/btc-safe-inherinance/static/js/main.5d9f1412.chunk.js"
   },
   {
     "revision": "19c4c487b38ae6d74d95",
