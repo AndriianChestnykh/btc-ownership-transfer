@@ -129,17 +129,17 @@ class App extends React.Component {
     const refreshButton = <button onClick={() => this.refresh()}><b>Refresh Blockchain data</b></button>;
     return (
       <div className="ui container">
-        <p/>
-        <h2 className="ui header center aligned">Safe Bitcoin inheritance</h2>
+        <br/>
+        <h2 className="ui header center aligned">Bitcoin safe inheritance</h2>
         <p>This Proof-of-Concept represents secure and convenient Bitcoin transfer from owner to heir(recovery) party in case if owner's keys are lost or some accident happens. This is trustless model between owner and heir as long as owner has exclusive control of her private keys. Heir delay time is fixed and equals to 6 Bitcoin blocks.</p>
         <p>Please refere to <a href="https://bitcointalk.org/index.php?topic=5185907.0">this Bitcointalk discussion</a> for more motivation info and details.</p>
-        <p style={{color: 'red'}}>It works on Bitcoin TESTNET.</p>
-        <p style={{color: 'red'}}>Please DON'T use mnemonics from your Bitcoin mainnet funds! That is potentially not safe.</p>
+        <p style={{color: 'red'}}>It works on Bitcoin TESTNET. Please DON'T use mnemonics from your Bitcoin mainnet funds! That is potentially not safe and may cause your funds to be lost forever.</p>
         <p align="center">{refreshButton}</p>
         <div className="ui four column doubling stackable grid container">
           <div className="column">
-            <Person mnemonic={this.state.owner.mnemonic}
-                    person="owner"
+            <Person person="owner"
+                    owner={this.state.owner}
+                    heir={this.state.heir}
                     updateMnemonic={this.updateMnemonic}
                     actions={{ addTx: this.addTx }}
                     blocks={this.state.blocks}
@@ -157,8 +157,9 @@ class App extends React.Component {
             />
           </div>
           <div className="column">
-            <Person mnemonic={this.state.heir.mnemonic}
-                    person="heir"
+            <Person person="heir"
+                    owner={this.state.owner}
+                    heir={this.state.heir}
                     updateMnemonic={this.updateMnemonic}
                     actions={{}}
                     blocks={this.state.blocks}
@@ -166,6 +167,24 @@ class App extends React.Component {
             />
           </div>
         </div>
+        <h3>Bitcoin testnet faucet</h3>
+        <ul>
+          <li><a href="https://coinfaucet.eu/en/btc-testnet/">https://coinfaucet.eu/en/btc-testnet/</a></li>
+        </ul>
+        <h3>Source code</h3>
+        <ul>
+          <li><a href="https://github.com/AndriianChestnykh/btc-safe-inherinance">https://github.com/AndriianChestnykh/btc-safe-inherinance</a></li>
+        </ul>
+        <h3>Libraries</h3>
+        <ul>
+          <li><a href="https://github.com/bitcoinjs/bitcoinjs-lib">BitcoinJS</a></li>
+          <li><a href="https://github.com/bitcoinjs/bip39">bip39</a></li>
+          <li><a href="https://github.com/bitcoinjs/bip68">bip68</a></li>
+        </ul>
+        <h3>Blockchain API providers</h3>
+        <ul>
+          <li><a href="https://blockchair.com/">Blockchair</a></li>
+        </ul>
       </div>
     );
   }

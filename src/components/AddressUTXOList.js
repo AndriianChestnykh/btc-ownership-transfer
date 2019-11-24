@@ -52,7 +52,9 @@ class AddressUTXOList extends React.Component{
                                             utxo={utxo}
                                             redeem={this.props.redeem}
                                             actions={this.props.actions}
-                                            blocks={this.props.blocks}/>))
+                                            blocks={this.props.blocks}
+                                            owner={this.props.owner}
+                                            heir={this.props.heir}/>))
         : <div>No UTXOs</div>);
     } else {
       return <div>Loading...</div>

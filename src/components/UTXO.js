@@ -24,8 +24,8 @@ class UTXO extends React.Component {
   addTxWrapper(){
     //todo not from config but from method params
     const { network } = config;
-    const owner = utils.getHDChild(config.owner.mnemonic, config.owner.derivationPath, network);
-    const heir = utils.getHDChild(config.heir.mnemonic, config.heir.derivationPath, network);
+    const owner = utils.getHDChild(this.props.owner.mnemonic, this.props.owner.derivationPath, network);
+    const heir = utils.getHDChild(this.props.heir.mnemonic, this.props.heir.derivationPath, network);
     const tx = utils.signTx({
       childOwner: owner.child,
       childHeir: heir.child,
@@ -51,7 +51,7 @@ class UTXO extends React.Component {
   sendToOwnerWrapper(){
     //todo not from config but from method params
     const { network } = config;
-    const { child, address } = utils.getHDChild(config.owner.mnemonic, config.owner.derivationPath, network);
+    const { child, address } = utils.getHDChild(this.props.owner.mnemonic, this.props.owner.derivationPath, network);
     const tx = utils.signToOwner({
       childPerson: child,
       redeemScript: Buffer.from(this.props.redeem, 'hex'),
@@ -67,7 +67,7 @@ class UTXO extends React.Component {
 
   sendToHeirWrapper(){
     const { network } = config;
-    const { child, address } = utils.getHDChild(config.heir.mnemonic, config.heir.derivationPath, network);
+    const { child, address } = utils.getHDChild(this.props.heir.mnemonic, this.props.heir.derivationPath, network);
     const tx = utils.signToHeir({
       childPerson: child,
       redeemScript: Buffer.from(this.props.redeem, 'hex'),

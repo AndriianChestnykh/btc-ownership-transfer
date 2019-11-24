@@ -6,8 +6,10 @@ import { getHDChild, isValidMnemonic } from '../utils';
 
 class Person extends React.Component {
   render(){
-    const { person, mnemonic, updateMnemonic, blocks, statsTime, actions } = this.props;
-    const { [person]: { derivationPath, name }, network } = config;
+    const { person, owner, heir, updateMnemonic, blocks, statsTime, actions } = this.props;
+    const { [person]: { derivationPath, mnemonic } } = this.props;
+    const { [person]: { name }, network } = config;
+
     const { address } = isValidMnemonic(mnemonic) ? getHDChild(mnemonic, derivationPath, network): {};
 
     return (<div className="ui card">
@@ -23,7 +25,7 @@ class Person extends React.Component {
         <p>Derivation path: {derivationPath}</p>
       </div>
       <div className="content">
-        <AddressUTXOList address={address} actions={actions} blocks={blocks} statsTime={statsTime}/>
+        <AddressUTXOList address={address} actions={actions} blocks={blocks} statsTime={statsTime} owner={owner} heir={heir}/>
       </div>
     </div>)
   }

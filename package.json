@@ -5,7 +5,6 @@
   "homepage": "https://andriianchestnykh.github.io/btc-safe-inherinance/",
   "dependencies": {
     "axios": "^0.19.0",
-    "bcoin": "^1.0.2",
     "bip39": "^3.0.2",
     "bip68": "^1.0.4",
     "bitcoinjs-lib": "^5.1.6",

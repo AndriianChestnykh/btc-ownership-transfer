@@ -10,6 +10,8 @@ class Intermediate extends React.Component{
                                                                           actions={this.props.actions}
                                                                           blocks={this.props.blocks}
                                                                           statsTime={this.props.statsTime}
+                                                                          owner={this.props.owner}
+                                                                          heir={this.props.heir}
     />))
   }
 
