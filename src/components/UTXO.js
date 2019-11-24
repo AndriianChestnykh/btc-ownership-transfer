@@ -83,12 +83,18 @@ class UTXO extends React.Component {
   }
 
   render(){
+    const confirmations = this.props.utxo.block_id === -1
+      ? 'Unconfirmed'
+      : !this.props.blocks
+        ? 'Loading...'
+        : this.props.blocks - this.props.utxo.block_id + 1;
     return (<div style={{ wordWrap: "break-word" }}>
       <p><strong>UTXO {this.props.index + 1}</strong></p>
       <span>Tx hash: {this.props.utxo.transaction_hash}</span><br/>
       <span>Index: {this.props.utxo.index}</span><br/>
       <span>Value: {this.props.utxo.value / (10**8) + ' BTC'}</span><br/>
-      <span>Block: {this.props.utxo.block_id}</span><br/><br/>
+      <span>Block: {this.props.utxo.block_id}</span><br/>
+      <span>Confirmations: { confirmations }</span><br/><br/>
       { this.getActionButtons(this.props.actions) }<br/><br/>
     </div>)
   }

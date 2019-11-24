@@ -147,7 +147,7 @@ async function broadcastTx(tx) {
     }
   })
     .catch(error => alert('Blockchain API request error: ' + error));
-  if (response) alert('Broadcasted with message: ' + JSON.stringify(response));
+  if (response) console.log('Broadcasted with message: ' + JSON.stringify(response));
 }
 
 function isValidMnemonic(mnemonic) {

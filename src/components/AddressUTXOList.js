@@ -13,6 +13,7 @@ class AddressUTXOList extends React.Component{
       needToRerenderUTXOs: false,
       utxos: []
     };
+    this.updateUTXOList = this.updateUTXOList.bind(this);
   }
 
   componentDidMount() {
@@ -20,7 +21,7 @@ class AddressUTXOList extends React.Component{
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.address !== this.props.address) {
+    if (nextProps.address !== this.props.address || nextProps.statsTime !== this.props.statsTime) {
       this.updateUTXOList(nextProps.address);
       return true;
     }
@@ -35,14 +36,14 @@ class AddressUTXOList extends React.Component{
     if (!utils.validateAddress(address).isValid) return;
     this.loadingUTXOs = true;
     const uri = `${config.apiURIs.address}/${address}`;
-    const response = await axios.get(uri)
+    const responseAddress = await axios.get(uri)
       .catch(error => alert('Blockchain API request error: ' + error));
-    console.log(`Fetching for ${address}`);
+    console.log(`Fetching for address utxos from ${uri}`);
     this.loadingUTXOs = false;
-    this.setState({ needToRerenderUTXOs: true, utxos: response.data.data[address].utxo });
+    this.setState({ needToRerenderUTXOs: true, utxos: responseAddress.data.data[address].utxo });
   }
 
-  getAllUtxo(){
+  getAllUtxo() {
     if (!this.loadingUTXOs) {
       const utxos = this.state.utxos;
       return (utxos.length
@@ -50,19 +51,25 @@ class AddressUTXOList extends React.Component{
                                             index={index}
                                             utxo={utxo}
                                             redeem={this.props.redeem}
-                                            actions={this.props.actions}/>))
+                                            actions={this.props.actions}
+                                            blocks={this.props.blocks}/>))
         : <div>No UTXOs</div>);
     } else {
       return <div>Loading...</div>
     }
   }
 
-  getHeader(){
+  getHeader() {
     const validateAddressResult = utils.validateAddress(this.props.address);
-    const redeem = this.props.redeem ? <p>Redeem: {this.props.redeem}</p>: '';
-    const info = this.props.info ? <p>Info: {JSON.stringify(this.props.info, null, '\t')}</p>: '';
+    const redeem = this.props.redeem ? <span><b>Redeem: </b><br/>{this.props.redeem}</span>: '';
+    const info = this.props.info ? <span><b>Info: </b><br/>{JSON.stringify(this.props.info, null, '\t')}</span>: '';
     return validateAddressResult.isValid
-      ? <div style={{ wordWrap: "break-word" }}><h4>{this.props.address}</h4>{redeem}<br/>{info}<br/></div>
+      ? <div style={{ wordWrap: "break-word" }}>
+          <h4>{this.props.address}</h4>
+          {redeem ? <p><br/>{redeem}<br/></p>: ''}
+          {info ? <p>{info}<br/></p>: ''}
+          <br/>
+        </div>
       : <h4>Address is not valid: {validateAddressResult.message}</h4>;
   }
 
@@ -75,7 +82,7 @@ class AddressUTXOList extends React.Component{
 }
 
 AddressUTXOList.propTypes = {
-  address: PropTypes.string.isRequired
+  address: PropTypes.string
 };
 
 export default AddressUTXOList;

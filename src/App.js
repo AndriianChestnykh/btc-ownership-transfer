@@ -3,7 +3,8 @@ import Person from './components/Person';
 import Transactions from './components/Transactions';
 import config from './config';
 import Intermediate from "./components/Intermediate";
-import {getHDChild} from "./utils";
+import { getHDChild } from "./utils";
+import axios from "axios";
 
 class App extends React.Component {
   constructor(props) {
@@ -12,7 +13,9 @@ class App extends React.Component {
     this.state = {
       owner: config.owner,
       heir: config.heir,
-      network: config.network
+      network: config.network,
+      blocks: undefined,
+      statsTime: undefined
     };
 
     const { owner, heir, network } = this.state;
@@ -23,6 +26,9 @@ class App extends React.Component {
     this.removeTx = this.removeTx.bind(this);
     this.addIntermediate = this.addIntermediate.bind(this);
     this.removeIntermediate = this.removeIntermediate.bind(this);
+    this.refresh = this.refresh.bind(this);
+
+    this.refresh();
   }
 
   getStorageKey(owner, heir, network) {
@@ -60,7 +66,7 @@ class App extends React.Component {
     });
   }
 
-   addStateData(data, propName, keyName) {
+  addStateData(data, propName, keyName) {
     let newProp;
     if (this.state[propName].filter(value => value[keyName] === data[keyName]).length === 0) {
       newProp = this.state[propName].concat([data]);
@@ -111,8 +117,16 @@ class App extends React.Component {
     this.removeStateData('intermediate', 'address', address);
   }
 
-  // '2MyhmXWCppJMQH1ui42J7jF4iw4j5aPufHU'
-  render(){
+  async refresh() {
+    const uri = config.apiURIs.stats;
+    console.log(`Fetching for blockchain stats from ${uri}`);
+    const response = await axios.get(uri)
+      .catch(error => alert('Blockchain API request error: ' + error));
+    this.setState({ blocks: response.data.data.blocks, statsTime: Date.now() });
+  }
+
+  render() {
+    const refreshButton = <button onClick={() => this.refresh()}><b>Refresh Blockchain data</b></button>;
     return (
       <div className="ui container">
         <p/>
@@ -121,12 +135,15 @@ class App extends React.Component {
         <p>Please refere to <a href="https://bitcointalk.org/index.php?topic=5185907.0">this Bitcointalk discussion</a> for more motivation info and details.</p>
         <p style={{color: 'red'}}>It works on Bitcoin TESTNET.</p>
         <p style={{color: 'red'}}>Please DON'T use mnemonics from your Bitcoin mainnet funds! That is potentially not safe.</p>
+        <p align="center">{refreshButton}</p>
         <div className="ui four column doubling stackable grid container">
           <div className="column">
             <Person mnemonic={this.state.owner.mnemonic}
                     person="owner"
                     updateMnemonic={this.updateMnemonic}
                     actions={{ addTx: this.addTx }}
+                    blocks={this.state.blocks}
+                    statsTime={this.state.statsTime}
             />
           </div>
           <div className="column">
@@ -134,13 +151,18 @@ class App extends React.Component {
           </div>
           <div className="column">
             <Intermediate addressesData={this.state.intermediate}
-                          actions={{ sendToOwner: this.removeIntermediate, sendToHeir: this.removeIntermediate }}/>
+                          actions={{ sendToOwner: this.removeIntermediate, sendToHeir: this.removeIntermediate }}
+                          blocks={this.state.blocks}
+                          statsTime={this.state.statsTime}
+            />
           </div>
           <div className="column">
             <Person mnemonic={this.state.heir.mnemonic}
                     person="heir"
                     updateMnemonic={this.updateMnemonic}
                     actions={{}}
+                    blocks={this.state.blocks}
+                    statsTime={this.state.statsTime}
             />
           </div>
         </div>

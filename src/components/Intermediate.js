@@ -7,10 +7,12 @@ class Intermediate extends React.Component{
                                                                           address={data.address}
                                                                           redeem={data.redeem}
                                                                           info={data.info}
-                                                                          actions={this.props.actions}/>))
+                                                                          actions={this.props.actions}
+                                                                          blocks={this.props.blocks}
+                                                                          statsTime={this.props.statsTime}
+    />))
   }
 
-  // 2MyhmXWCppJMQH1ui42J7jF4iw4j5aPufHU
   render(){
     return (<div className="ui card">
       <div className="content">

@@ -1,10 +1,18 @@
 import * as bitcoin from 'bitcoinjs-lib';
 
+const network = bitcoin.networks.testnet;
+const networkUrlPart = new Map([
+  [bitcoin.networks.testnet, 'bitcoin/testnet'],
+  [bitcoin.networks.bitcoin, 'bitcoin'],
+]);
+
+
 const config = {
-  network: bitcoin.networks.testnet,
+  network: network,
   apiURIs: {
-    address: 'https://api.blockchair.com/bitcoin/testnet/dashboards/address',
-    pushTx: 'https://api.blockchair.com/bitcoin/testnet/push/transaction'
+    address: `https://api.blockchair.com/${networkUrlPart.get(network)}/dashboards/address`,
+    pushTx: `https://api.blockchair.com/${networkUrlPart.get(network)}/push/transaction`,
+    stats: `https://api.blockchair.com/${networkUrlPart.get(network)}/stats`
   },
   owner: {
     name: 'Alice (owner)',
