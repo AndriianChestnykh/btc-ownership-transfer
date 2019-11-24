@@ -154,6 +154,8 @@ class App extends React.Component {
                           actions={{ sendToOwner: this.removeIntermediate, sendToHeir: this.removeIntermediate }}
                           blocks={this.state.blocks}
                           statsTime={this.state.statsTime}
+                          owner={this.state.owner}
+                          heir={this.state.heir}
             />
           </div>
           <div className="column">
