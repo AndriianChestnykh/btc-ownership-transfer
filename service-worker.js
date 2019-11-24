@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/btc-safe-inherinance/precache-manifest.6ec38f058e5785acee233aad9424bb81.js"
+  "/btc-safe-inherinance/precache-manifest.41ae8a1817d22be78d4559b08cd451b5.js"
 );
 
 self.addEventListener('message', (event) => {
