@@ -87,7 +87,7 @@ class UTXO extends React.Component {
       ? 'Unconfirmed'
       : !this.props.blocks
         ? 'Loading...'
-        : this.props.blocks - this.props.utxo.block_id + 1;
+        : this.props.blocks - this.props.utxo.block_id;
     return (<div style={{ wordWrap: "break-word" }}>
       <p><strong>UTXO {this.props.index + 1}</strong></p>
       <span>Tx hash: {this.props.utxo.transaction_hash}</span><br/>
