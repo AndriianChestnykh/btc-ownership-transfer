@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "550aeef449a9f0877b140179e4d4519d",
+    "revision": "8ef6b8ca816ba8606a6b03a7c8b211af",
     "url": "/btc-safe-inherinance/index.html"
   },
   {
-    "revision": "3f96e83f98867cd49314",
+    "revision": "4e7e06d9d3ef84caa974",
     "url": "/btc-safe-inherinance/static/css/2.8f22c830.chunk.css"
   },
   {
-    "revision": "3f96e83f98867cd49314",
-    "url": "/btc-safe-inherinance/static/js/2.83be3be4.chunk.js"
+    "revision": "4e7e06d9d3ef84caa974",
+    "url": "/btc-safe-inherinance/static/js/2.fcd350c2.chunk.js"
   },
   {
-    "revision": "b3859d74a93eceb47cb0",
-    "url": "/btc-safe-inherinance/static/js/main.fbe4b244.chunk.js"
+    "revision": "1c4fbb20c3ab4fa85dac",
+    "url": "/btc-safe-inherinance/static/js/main.725f5859.chunk.js"
   },
   {
-    "revision": "19c4c487b38ae6d74d95",
-    "url": "/btc-safe-inherinance/static/js/runtime-main.47b4a75b.js"
+    "revision": "967323829f8940e0ae1e",
+    "url": "/btc-safe-inherinance/static/js/runtime-main.6fb9b1de.js"
   },
   {
     "revision": "13db00b7a34fee4d819ab7f9838cc428",
