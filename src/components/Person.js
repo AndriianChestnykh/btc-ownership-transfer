@@ -9,7 +9,6 @@ class Person extends React.Component {
     const { person, owner, heir, updateMnemonic, blocks, statsTime, actions } = this.props;
     const { [person]: { derivationPath, mnemonic } } = this.props;
     const { [person]: { name }, network } = config;
-
     const { address } = isValidMnemonic(mnemonic) ? getHDChild(mnemonic, derivationPath, network): {};
 
     return (<div className="ui card">

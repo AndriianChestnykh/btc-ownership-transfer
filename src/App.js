@@ -132,7 +132,7 @@ class App extends React.Component {
         <br/>
         <h2 className="ui header center aligned">Bitcoin safe inheritance</h2>
         <p>This Proof-of-Concept represents secure and convenient Bitcoin transfer from owner to heir(recovery) party in case if owner's keys are lost or some accident happens. This is trustless model between owner and heir as long as owner has exclusive control of her private keys. Heir delay time is fixed and equals to 6 Bitcoin blocks.</p>
-        <p>Please refere to <a href="https://bitcointalk.org/index.php?topic=5185907.0">this Bitcointalk discussion</a> for more motivation info and details.</p>
+        <p>Please refer to <a href="https://bitcointalk.org/index.php?topic=5185907.0">this Bitcointalk discussion</a> for more motivation info and details.</p>
         <p style={{color: 'red'}}>It works on Bitcoin TESTNET. Please DON'T use mnemonics from your Bitcoin mainnet funds! That is potentially not safe and may cause your funds to be lost forever.</p>
         <p align="center">{refreshButton}</p>
         <div className="ui four column doubling stackable grid container">
