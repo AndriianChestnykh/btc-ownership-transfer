@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8ef6b8ca816ba8606a6b03a7c8b211af",
+    "revision": "66f63cc189d077e5151356a0aaebbc96",
     "url": "/btc-safe-inherinance/index.html"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/btc-safe-inherinance/static/js/2.fcd350c2.chunk.js"
   },
   {
-    "revision": "1c4fbb20c3ab4fa85dac",
-    "url": "/btc-safe-inherinance/static/js/main.725f5859.chunk.js"
+    "revision": "62835ccf0671794aac7c",
+    "url": "/btc-safe-inherinance/static/js/main.c23b5aae.chunk.js"
   },
   {
     "revision": "967323829f8940e0ae1e",
